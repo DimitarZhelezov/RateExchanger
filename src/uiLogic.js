@@ -38,7 +38,7 @@ export const onCurrencySelectClick = (currentTarget = {}) => {
         if(shouldFetchData(lowerCaseValue)) {
             fetchCurrencyData(lowerCaseValue);
         } else {
-            updateUI(value);
+            updateUI(lowerCaseValue);
         }
     };
 };

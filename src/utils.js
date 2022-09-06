@@ -40,8 +40,8 @@ const initialLoad = () => {
     fetchCurrencyData();
 };
 
-export const getLoadStrategy = (currency = currenciesList[0]) => {
-    const hasTodaysData = !!getStoredDataForCurrency(currency);
+export const getLoadStrategy = () => {
+    const hasTodaysData = !!getStoredDataForCurrency(currenciesList[0]);
     
     return !hasTodaysData ? initialLoad : sequancyLoad; 
 };
@@ -54,31 +54,36 @@ export const getLongestGroupLengh = (data = {}) => {
     return Math.max(data[firstGroupString].length, data[secondGroupString].length, data[thirtGroupString].length);
 };
 
-const getIsLessThanOrEqual = (input, conditionValue) => {
-    return input <= conditionValue;
+const getIsLessThanOrEqual = (x, y) => {
+    return x <= y;
 };
 
 export const calculateLongestSequence = (sortedData = []) => {
-    const dataLength = sortedData.length;
-    let index = 1;
-    let tempLongestSequance = 1;
+    let currentLongestSequance = 1;
     let result = 0;
-    let currentIndex = 0;
+    let traversStop = false;
+    let traversedIndex = 1;
 
-    while(index < dataLength) {
-        const currentValue = sortedData[index] - sortedData[index - 1];
-        
-        if(getIsLessThanOrEqual(currentValue, fiveTenths)){
-            tempLongestSequance += 1;
-        } else {
-            tempLongestSequance = 1;
+
+    for (let index = 0; index < sortedData.length; index++) {
+        traversStop = getIsLessThanOrEqual(sortedData, traversedIndex);
+
+        if(traversedIndex == index) {
+            traversedIndex++
+        };
+
+        while(!traversStop) {
+            const value = Math.abs(sortedData[index] - sortedData[traversedIndex]);
+
+            if(getIsLessThanOrEqual(value, fiveTenths)) {
+                currentLongestSequance++;
+                result = getIsLessThanOrEqual(result, currentLongestSequance) ? currentLongestSequance : result;
+                traversedIndex++
+            } else {
+                traversStop = true;
+                currentLongestSequance--;
+            };
         }
-
-        if(getIsLessThanOrEqual(result, tempLongestSequance)) {
-            result = tempLongestSequance;
-        }
-
-        index++;
     }
 
     return result;
