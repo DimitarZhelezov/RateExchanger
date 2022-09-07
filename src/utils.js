@@ -6,15 +6,23 @@ import {
     thirtGroupString
 } from './globalConsts.js';
 import { currenciesList } from "./globalConsts.js";
-import { getStoredDataForCurrency } from './localStorageHandlers.js';
+import { cleanExchangeRates, getStoredDataForCurrency } from './localStorageHandlers.js';
 import { updateUI } from "./uiLogic.js";
+
+const getSecondGroupRule = (value) => {
+    return value >= 1 && value < 1.5;
+};
+
+const getThirtGroupRule = (value) => {
+    return value >= 1.5;
+};
 
 export const getRateGroupString = (value) => {
     let result = firstGroupString;
 
-    if (value >= 1 && value < 1.5) {
+    if (getSecondGroupRule(value)) {
         result = secondGroupString;
-    } else if (value >= 1.5) {
+    } else if (getThirtGroupRule(value)) {
         result = thirtGroupString;
     };
 
@@ -36,7 +44,12 @@ const sequancyLoad = () => {
     updateUI(currenciesList[0]);
 };
 
+const cleanOldData = () => {
+    cleanExchangeRates();
+}
+
 const initialLoad = () => {
+    cleanOldData();
     fetchCurrencyData();
 };
 
@@ -60,13 +73,12 @@ const getIsLessThanOrEqual = (x, y) => {
 
 export const calculateLongestSequence = (sortedData = []) => {
     let currentLongestSequance = 1;
-    let result = 0;
+    let result = 1;
     let traversStop = false;
     let traversedIndex = 1;
 
-
     for (let index = 0; index < sortedData.length; index++) {
-        traversStop = getIsLessThanOrEqual(sortedData, traversedIndex);
+        traversStop = getIsLessThanOrEqual(sortedData[index], traversedIndex);
 
         if(traversedIndex == index) {
             traversedIndex++

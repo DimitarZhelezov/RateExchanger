@@ -6,3 +6,5 @@ export const secondGroupString = 'Group2';
 export const thirtGroupString = 'Group3';
 
 export const fiveTenths = 0.5;
+
+export const exchangeRatesHead = 'exchangeRates';

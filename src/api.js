@@ -1,12 +1,12 @@
-import { currenciesList } from "./globalConsts.js";
+import { currenciesList, exchangeRatesHead } from "./globalConsts.js";
 import { buildStorageData, populateLocalStoragePerKeyPerKey } from "./localStorageHandlers.js";
 import { updateUI } from "./uiLogic.js";
 import { getTodayFormated } from "./utils.js";
 
 const handleSuccessCurrencyFetch = (currency, data) => {
     const modifiedData = buildStorageData(data, currency);
-    const today = getTodayFormated();
-    populateLocalStoragePerKeyPerKey(today, modifiedData);
+    const key = `${exchangeRatesHead}_${getTodayFormated()}`;
+    populateLocalStoragePerKeyPerKey(key, modifiedData);
 }
 
 export const fetchCurrencyData = (currency = currenciesList[0]) => {
