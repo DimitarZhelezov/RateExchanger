@@ -15,9 +15,7 @@ export const fetchCurrencyData = (currency = currenciesList[0]) => {
     $.get(requestedUrl, (data) => {
         handleSuccessCurrencyFetch(currency, data);
     })
-        .done(() => {
-            updateUI(currency)
-        }).fail(() => {
+        .fail(() => {
             alert("somethings gone wrong");
         })
 };

@@ -50,7 +50,10 @@ const cleanOldData = () => {
 
 const initialLoad = () => {
     cleanOldData();
-    fetchCurrencyData();
+    currenciesList.forEach(element => {
+        fetchCurrencyData(element);
+    });
+    updateUI(currenciesList[0]);
 };
 
 export const getLoadStrategy = () => {

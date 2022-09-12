@@ -13,7 +13,6 @@ export const buildStorageData = (data = {}, selectedCurrency) => {
     const sortedArray = [];
 
     currenciesList
-    //do we really need filter here? 
         .filter((currency => currency !== selectedCurrency))
         .forEach(currency => {
             const rateValue = rates[currency];
