@@ -1,5 +1,5 @@
 import { fetchCurrencyData } from "./api.js";
-import { currenciesList } from "./globalConsts.js";
+import { currenciesList, longestSequenceDisplayText, longestSequenceStorageKey } from "./globalConsts.js";
 import { getStoredDataForCurrency } from "./localStorageHandlers.js";
 import { getLongestGroupLengh, shouldFetchData } from "./utils.js";
 
@@ -11,20 +11,20 @@ const cleanTableBody = () => {
 };
 
 const updateLongestSequence = (longestSequenceValue) => {
-    const element = document.getElementById("longestSequence");
+    const element = document.getElementById(longestSequenceStorageKey);
 
-    element.innerHTML = `Longest sequence: ${longestSequenceValue}`;
+    element.innerHTML = `${longestSequenceDisplayText}: ${longestSequenceValue}`;
 };
 
-const updateTableUi = (tableData) => {
+const updateTableUi = (tableGroupData) => {
     cleanTableBody();
-    populateTableData(tableData);
+    populateTableData(tableGroupData);
 };
 
 export const updateUI = (currency) => {
-    const data = getStoredDataForCurrency(currency);
+    const data = getStoredDataForCurrency(currency) || {};
 
-    updateTableUi(data.tableData);
+    updateTableUi(data.tableGroupData);
     updateLongestSequence(data.longestSequence);
 };
 

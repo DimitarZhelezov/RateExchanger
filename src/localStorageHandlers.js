@@ -1,47 +1,41 @@
-import { currenciesList, exchangeRatesHead, firstGroupString, secondGroupString, thirtGroupString } from "./globalConsts.js";
-import { calculateLongestSequence, getRateGroupString, getSpliceIndex, getTodayFormated } from "./utils.js";
+import { currenciesList, exchangeRatesHead, longestSequenceStorageKey } from "./globalConsts.js";
+import {
+    assembleTableData,
+    calculateLongestSequence,
+    combineExchangeRates,
+    determineTableGroupData,
+    extractAdditionalRates,
+    getTodayFormated,
+    sortCurrencyRates
+} from "./utils.js";
 
-export const buildStorageData = (data = {}, selectedCurrency) => {
-    const dateToday = getTodayFormated();
-    const rates = data[selectedCurrency];
-    const storedData = getStoredDataPerKey(`${exchangeRatesHead}_${dateToday}`);
-    const tableData = {
-        [firstGroupString]: [],
-        [secondGroupString]: [],
-        [thirtGroupString]: []
-    };
-    const sortedArray = [];
+export const buildStorageData = (data = []) => {
+    const result = {};
 
-    currenciesList
-        .filter((currency => currency !== selectedCurrency))
-        .forEach(currency => {
-            const rateValue = rates[currency];
-            const rateGroup = getRateGroupString(rateValue);
+    data.forEach((currentCurrencyData, index) => {
+        const currentCurrency = currenciesList[index];
+        const rates = currentCurrencyData[currentCurrency];
+        const { sortedValues, sortedCurrenciesCodes } = sortCurrencyRates(rates, currentCurrency);
+        const displayData = assembleTableData(sortedValues, sortedCurrenciesCodes);
+        const additionalValues = extractAdditionalRates(data, currentCurrency);
+        const longestSequence = combineExchangeRates(sortedValues, additionalValues, currentCurrencyData);
 
-            const spliceIndex = getSpliceIndex(sortedArray, rateValue);
-            
-            sortedArray.splice(spliceIndex, 0, rateValue);
-            tableData[rateGroup].splice(spliceIndex, 0, `${currency.toUpperCase()}:${rateValue}`);
-        });
+        result[currentCurrency] = {
+            tableGroupData: determineTableGroupData(displayData),
+            [longestSequenceStorageKey]: calculateLongestSequence(longestSequence)
+        };
+    });
 
-    const longestSequence = calculateLongestSequence(sortedArray);
-    
-    return {
-        ...storedData,
-        [selectedCurrency]: {
-            tableData,
-            'longestSequence': longestSequence
-        }
-    };
+    return result;
 };
 
 export const getStoredDataPerKey = (key) => {
     return JSON.parse(localStorage.getItem(key));
-}
+};
 
 export const removeStoredDataPerKey = (key) => {
     JSON.parse(localStorage.removeItem(key));
-}
+};
 
 export const populateLocalStoragePerKeyPerKey = (key, data) => {
     localStorage.setItem(key, JSON.stringify(data));
@@ -53,8 +47,6 @@ export const getStoredDataForCurrency = (currency) => {
 
     return storedData[currency.toLowerCase()];
 };
-
-
 
 export const cleanExchangeRates = () => {
     Object.keys(localStorage).forEach(element => {

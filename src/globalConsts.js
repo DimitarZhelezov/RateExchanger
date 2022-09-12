@@ -8,3 +8,6 @@ export const thirtGroupString = 'Group3';
 export const fiveTenths = 0.5;
 
 export const exchangeRatesHead = 'exchangeRates';
+
+export const longestSequenceStorageKey = 'longestSequence';
+export const longestSequenceDisplayText ='Longest sequence';
