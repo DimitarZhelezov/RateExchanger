@@ -170,7 +170,7 @@ export const calculateLongestSequence = (sortedData) => {
                 traversedIndex++
             } else {
                 traversStop = true;
-                currentLongestSequance--;
+                currentLongestSequance = Math.max(currentLongestSequance - 1, 1);
             };
         }
     }

@@ -17,7 +17,7 @@ describe('getRateGroupString should return correct string group', () => {
 
 describe('calculateLongestSequence should return correct calculation', () => {
     it('should return 1 when no condition is fullfilled', () => {
-        const input = [1.478853, 2.01953, 2.856672, 3.956731, 4.011168, 5.989457, 8.673006, 88.999674];
+        const input = [1.478853, 2.01953, 2.856672, 3.956731, 4.511168, 5.989457, 8.673006, 88.999674];
 
         expect(calculateLongestSequence(input)).toEqual(1);
     });
